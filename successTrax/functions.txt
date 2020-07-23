@@ -1,0 +1,6 @@
+functions to write:
+    check if employee exists
+    check if employee is training in a position
+    get training requirements for a position
+    check if item is required for training completion
+    load valid departments and positions

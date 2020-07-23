@@ -1,0 +1,131 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Record Document Review
+{% endblock %}
+
+{% block main %}
+
+<h1>Record Document Review</h1><br>
+<form action="/record_doc_review" class="needs-validation" method="post" novalidate>
+    <div class="col-md-3 mb-3">
+            <label for="employeeID">Employee ID Number*</label>
+            <input class="form-control" min=0 name="employeeID"  type="number" required>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please enter employee ID number</div>
+    </div>
+    <div class="form-row ml-2">
+        <div class="form-group col-md-2">
+            <label for="dept">Department*</label>
+            <select class="form-control" name="dept" id="department" required>
+                <option selected disabled value="">Select</option>
+                {% for dept in jobs %}
+                     <option>{{ dept }}</option>
+                {% endfor %}
+            </select>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please select a department</div>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="primaryJob">Training Position*</label>
+            <select class="form-control" name="primaryJob" id="primaryJob" required>
+                <option selected disabled value="">Select</option>
+            </select>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please select primary role</div>
+        </div>
+
+    </div>
+    <div class="form-group col-md-3">
+        <label for="primaryJob">Completion Date</label>
+        <input class="form-control" name="date" id="date" type="date" required>
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please enter date</div>
+    </div>
+    <div class="form-group col-md-3">
+        <label for="document">Review completed </label>
+        <select class="form-control" name="document" id="document"  required>
+            <option selected disabled value="">Select</option>
+            <option>SOP</option>
+            <option>QMS</option>
+            <option>Safety</option>
+        </select>
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please select document</div>
+    </div>
+
+
+    <div class="text-center">
+        <button class="btn btn-primary" type="submit">Record Completion</button>
+    </div>
+
+</form>
+<script>
+// Example starter JavaScript for disabling form submissions if there are invalid fields
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+</script>
+
+<script>
+    let dept = document.getElementById('department');
+    let jobs = document.getElementById('primaryJob');
+
+    dept.onchange = function(){
+        value = dept.value;
+        dict = {{ jobs|safe }};
+
+        jobsDisplay = dict[value];
+        let optionHTML = '';
+
+        for(let item of jobsDisplay){
+            optionHTML += '<option>' + item + '</option>';
+        }
+
+        jobs.innerHTML = optionHTML;
+    }
+</script>
+<script>
+    $(document).ready(function(){
+        var rows = 1;
+
+        $("#add").click(function(){
+            $('#records tbody>tr:last').clone(true).insertAfter('#records tbody>tr:last');
+            $('#records tbody>tr:last #area-fam').prop("checked", false);
+            $('#records tbody>tr:last #le').prop("checked", false);
+            $('#records tbody>tr:last #hours').val('');
+            $('#records tbody>tr:last #date').val('');
+            rows++;
+            return false;
+        });
+
+        $("#records").on('click', '.delete', function(){
+            if (rows > 1)
+            {
+                $(this).closest('tr').remove();
+                rows--;
+                return false;
+            }
+            else
+            {
+                return false
+            }
+        });
+    });
+</script>
+
+{% endblock %}

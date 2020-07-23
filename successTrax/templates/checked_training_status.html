@@ -1,0 +1,129 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Employee Training Status
+{% endblock %}
+
+{% block main %}
+
+<h2>Employee Training Status</h2><br>
+<div class="row">
+    <div class="col-md-2 text-center mb-4">
+        <img src="{{ url_for('static', filename=employee[0]['picture']) }}" class="img-fluid mx-auto" alt="profile pic">
+    </div>
+    <div class="col-md-10">
+        <table>
+            <tr>
+                <th scope="row" style="width:15%">Name</td>
+                <td style="width:25%">
+                    {% if  employee[0]['mid_name'] == "" %}
+                        {{  employee[0]['first_name'] }}  {{ employee[0]['last_name'] }}
+                    {% else %}
+                        {{  employee[0]['first_name'] }} {{ employee[0]['mid_name'] }} {{ employee[0]['last_name'] }}
+                    {% endif %}
+                </td>
+                <th scope="col" style="width:15%">Start date</th>
+                <td style="width:25%">{{ status[0].start_date }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Position</td>
+                <td>{{ status[0].training_position }}</td>
+                <th scope="col">End date</th>
+                <td>
+                    {% if  employee[0].end_date is not defined %}
+                        Training ongoing
+                    {% else %}
+                        {{  employee[0].end_date }}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Supervisor</td>
+                <td>Not assigned</td>
+                <th scope="row">Category</th>
+                <td>{{ status[0].category }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Trainer</td>
+                <td>Not assigned</td>
+                <th scope="row">Training shift</td>
+                <td>{{ status[0].training_shift }}</td>
+            </tr>
+        </table>
+
+    </div>
+
+        <div class="table-responsive mt-5">
+            <table class="table table-hover mx-auto w-auto" id="summary">
+                <tr>
+                    <th scope="col">Training Requirement</th>
+                    <th scope="col">Target</th>
+                    <th scope="col">Current Status</th>
+                    <th scope="col">Met requirement?</th>
+                </tr>
+                {% for item in checks %}
+                    <tr>
+                        <td>{{ item }}</td>
+                        <td class="text-center">{{ checks[item]['target'] }}</td>
+                        <td class="text-center">{{ checks[item]['current'] }}</td>
+                        <td class="met text-center">{{ checks[item]['met'] }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+</div>
+
+<script>
+// Example starter JavaScript for disabling form submissions if there are invalid fields
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+</script>
+
+<script>
+    let dept = document.getElementById('department');
+    let jobs = document.getElementById('primaryJob');
+
+    dept.onchange = function(){
+        value = dept.value;
+        dict = {{ jobs|safe }};
+
+        jobsDisplay = dict[value];
+        let optionHTML = '';
+
+        for(let item of jobsDisplay){
+            optionHTML += '<option>' + item + '</option>';
+        }
+
+        jobs.innerHTML = optionHTML;
+    }
+</script>
+<script>
+$(document).ready(function(){
+    $('#summary td.met').each(function(){
+        if ($(this).text() == 'No') {
+            $(this).css('background-color','#FFE5CC');
+        }
+        else {
+            $(this).css('background-color','#CCFFCC');
+        }
+    });
+});
+</script>
+
+{% endblock %}

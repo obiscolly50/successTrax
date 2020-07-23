@@ -1,0 +1,156 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Add Employee
+{% endblock %}
+
+{% block main %}
+<h1>Add Employee To Record</h1><br>
+<form action="/add_employee" class="needs-validation" method="post" novalidate>
+    <div class="form-row">
+        <div class="col-md-4 mb-3">
+            <label for="firstName">First Name*</label>
+            <input class="form-control" name="firstName"  type="text" required>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please enter first name</div>
+        </div>
+        <div class="col-md-4">
+            <label for="midName">Middle Name</label>
+            <input class="form-control" name="midName" type="text" placeholder="optional">
+        </div>
+        <div class="col-md-4">
+            <label for="lastName">Last Name*</label>
+            <input class="form-control" name="lastName"  type="text" required>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please enter last name</div>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="col-md-4 mb-3">
+            <label for="employeeID">Employee ID Number*</label>
+            <input class="form-control" min=0 name="employeeID"  type="number" required>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please enter employee ID number</div>
+        </div>
+        <div class="form-group col-md-4">
+            <label for="jobType">Job Type*</label>
+            <select class="form-control" name="jobType" required>
+                <option selected disabled value="">Select</option>
+                <option>Hourly</option>
+                <option>Staff</option>
+            </select>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please select a job type</div>
+        </div>
+        <div class="form-group col-md-4">
+            <label for="shift">Shift*</label>
+            <select class="form-control" name="shift"  type="text" required>
+                <option selected disabled value="">Select</option>
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+                <option>D</option>
+                <option>Day</option>
+            </select>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please select the employee's shift</div>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="dept">Department*</label>
+            <select class="form-control" name="dept" id="department" required>
+                <option selected disabled value="">Select</option>
+                {% for dept in jobs %}
+                     <option>{{ dept }}</option>
+                {% endfor %}
+            </select>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please select a department</div>
+        </div>
+        <div class="form-group col-md-4">
+            <label for="primaryJob">Primary Job/Posting</label>
+            <select class="form-control" name="primaryJob" id="primaryJob">
+                <option selected disabled value="">Select</option>
+            </select>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please select primary role</div>
+        </div>
+        <div class="form-group col-md-4">
+            <label for="phone">Phone Number*</label>
+            <input class="form-control" name="phone" type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required placeholder="format: 123-456-7890">
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please enter employee's phone number. Must be of format 123-456-7890.</div>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="email">Email address</label>
+            <input class="form-control" name="email" placeholder="optional">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="dateEmployed">Employment Date</label>
+            <input class="form-control" name="dateEmployed"  type="date" required>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please enter a valid date</div>
+        </div>
+        <div class="form-group col-md-4">
+            <label for="empStatus">Employment Status*</label>
+            <select class="form-control" name="empStatus"  type="text" required>
+                <option selected disabled value="">Select</option>
+                <option>Employed</option>
+                <option>Employed - Temporary</option>
+                <option>Intern</option>
+            </select>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please enter an employment status</div>
+        </div>
+    </div>
+    <div class="text-center">
+        <button class="btn btn-primary" type="submit">Add Employee</button>
+    </div>
+</form>
+
+<script>
+// Example starter JavaScript for disabling form submissions if there are invalid fields
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+</script>
+
+<script>
+    let dept = document.getElementById('department');
+    let jobs = document.getElementById('primaryJob');
+
+    dept.onchange = function(){
+        value = dept.value;
+        dict = {{ jobs|safe }};
+
+        jobsDisplay = dict[value];
+        let optionHTML = '';
+
+        for(let item of jobsDisplay){
+            optionHTML += '<option>' + item + '</option>';
+        }
+
+        jobs.innerHTML = optionHTML;
+    }
+</script>
+{% endblock %}

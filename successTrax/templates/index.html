@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Dashboard
+{% endblock %}
+
+{% block main %}
+<div class="text-center pt-5">
+    <h1 >Welcome to SuccessTrax</h1>
+    <h6>Training management software</h6><br>
+    <h6>Obi Nnaemeka</h6>
+    <h6>Winnipeg, Canada</h6>
+    <br>
+</div>
+<div class="row justify-content-center">
+    <div class="text-center">
+        <form action="#" class="needs-validation" method="post" novalidate>
+            <div class="form-group">
+                <input class="form-control" name="q"  type="text" placeholder="Quick employee lookup" required>
+            </div>
+            <div>
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
