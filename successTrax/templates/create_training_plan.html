@@ -1,0 +1,276 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Create Training Plan
+{% endblock %}
+
+{% block main %}
+<h1>Create Training Plan</h1><br>
+
+<h5>Please select/enter all training requirements that apply.</h5><br>
+<form action="/create_training_plan" class="needs-validation" method="post" novalidate>
+    <div class="form-group col-md-4">
+            <label for="dept">Department*</label>
+            <select class="form-control" name="dept" id="department" required>
+                <option selected disabled value="">Select</option>
+                {% for dept in jobs %}
+                     <option>{{ dept }}</option>
+                {% endfor %}
+            </select>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please select a department</div>
+    </div>
+    <div class="form-group col-md-4">
+            <label for="primaryJob">Primary Job*</label>
+            <select class="form-control" name="primaryJob" id="primaryJob" required>
+                <option selected disabled value="">Select</option>
+            </select>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Please select primary role</div>
+    </div>
+    <div class="form-check mb-3 ml-3">
+        <input type="checkbox" class="form-check-input" name="safety">
+        <label class="form-check-label" for="safety">Safety orientation required</label>
+    </div>
+    <div class="form-check mb-3 ml-3">
+        <input type="checkbox" class="form-check-input" name="sop-review">
+        <label class="form-check-label" for="sop-review">SOP review required</label>
+    </div>
+    <div class="form-check mb-3 ml-3">
+        <input type="checkbox" class="form-check-input" name="qms-review">
+        <label class="form-check-label" for="qms-review">QMS review required</label>
+    </div>
+    <div class="form-check mb-3 ml-3">
+        <input type="checkbox" class="form-check-input" name="area-fam" id="area-fam">
+        <label class="form-check-label" for="area-fam">Area Familiarization required</label>
+    </div>
+
+    <div class="col-md-4 mb-3 ml-3 row" id="area-fam-hrs" style="display:none">
+            <label for="area-fam-hrs" class="col-form-label col-md-8">Number of hours*</label>
+            <div class="col-md-6">
+                <input class="form-control" min=0 name="area-fam-hrs" id="af-hrs" type="number">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Please enter number of hours</div>
+            </div>
+
+    </div>
+    <div class="form-check mb-3 ml-3">
+        <input type="checkbox" class="form-check-input" name="line-exp" id="line-exp">
+        <label class="form-check-label" for="line-exp">Line Experience required</label>
+    </div>
+    <div class="col-md-4 mb-3 ml-3 row" id="line-exp-hrs" style="display:none">
+            <label for="line-exp-hrs" class="col-form-label col-md-8">Number of hours*</label>
+            <div class="col-md-6">
+                <input class="form-control" min=0 name="line-exp-hrs" id="le-hrs" type="number">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Please enter number of hours</div>
+            </div>
+    </div>
+    <div class="form-check mb-3 ml-3">
+        <input type="checkbox" class="form-check-input" name="test" id="test">
+        <label class="form-check-label" for="test">Testing required</label>
+    </div>
+    <div class="form-group col-md-2 ml-4" id="testreq" style="display:none">
+            <label for="test-num">Number of tests*</label>
+            <select class="form-control" name="test-num" id="test-num" type="text" onChange="loadrow()">
+                <option selected disabled value="">Select</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+    </div>
+
+    <div class="ml-5" id="test-details"></div>
+
+    <div class="form-check mb-3 ml-3">
+        <input type="checkbox" class="form-check-input" name="cleanup-exp" id="cleanup-exp">
+        <label class="form-check-label" for="line-exp">Clean-up experience required</label>
+    </div>
+    <div class="col-md-4 mb-3 ml-3 row" id="cleanup-hrs" style="display:none">
+            <label for="cleanup-hrs" class="col-form-label col-md-8">Number of hours*</label>
+            <div class="col-md-6">
+                <input class="form-control" min=0 name="cleanup-hrs" id="cu-hrs" type="number">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Please enter number of hours</div>
+            </div>
+    </div>
+
+    <div class="form-check mb-3 ml-3">
+        <input type="checkbox" class="form-check-input" name="changeover-exp" id="changeover-exp">
+        <label class="form-check-label" for="changeover-exp">Change-over experience required</label>
+    </div>
+    <div class="col-md-4 mb-3 ml-3 row" id="changeover-hrs" style="display:none">
+            <label for="area-fam-hrs" class="col-form-label col-md-8">Number of hours*</label>
+            <div class="col-md-6">
+                <input class="form-control" min=0 name="changeover-hrs" id="co-hrs" type="number">
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Please enter number of hours</div>
+            </div>
+
+    </div>
+
+    <div class="form-check mb-3 ml-3">
+        <input type="checkbox" class="form-check-input" name="signoff">
+        <label class="form-check-label" for="signoff">Supervisor/Manager signoff required</label>
+    </div>
+    <div class="text-center">
+        <button class="btn btn-primary" type="submit">Create Plan</button>
+    </div>
+
+</form>
+
+<script>
+// Example starter JavaScript for disabling form submissions if there are invalid fields
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+</script>
+<script>
+    let dept = document.getElementById('department');
+    let jobs = document.getElementById('primaryJob');
+
+    dept.onchange = function(){
+        value = dept.value;
+        dict = {{ jobs|safe }};
+
+        jobsDisplay = dict[value];
+        let optionHTML = '';
+
+        for(let item of jobsDisplay){
+            optionHTML += '<option>' + item + '</option>';
+        }
+
+        jobs.innerHTML = optionHTML;
+    }
+</script>
+
+<script type="text/javascript">
+$('#line-exp').change(function() {
+    if(document.getElementById('line-exp').checked == true){ //if selected
+        $('#le-hrs').val("");
+        $('#line-exp-hrs').toggle();
+        document.getElementById('line-exp-hrs').style.display = "block";
+        document.getElementById('line-exp-hrs').setAttribute("required", "");
+    }
+    else{
+        $('#le-hrs').val("");
+        $('#line-exp-hrs').toggle();
+        document.getElementById('line-exp-hrs').style.display = "none";
+        document.getElementById('line-exp-hrs').setAttribute("required", "");
+    }
+});
+
+$('#area-fam').change(function() {
+
+    if(document.getElementById('area-fam').checked == true){ //if selected
+        $('#af-hrs').val("");
+        $('#area-fam-hrs').toggle();
+        document.getElementById('area-fam-hrs').style.display = "block";
+        document.getElementById('area-fam-hrs').setAttribute("required", "");
+    }
+    else{ //if not selected
+        $('#af-hrs').val("");
+        $('#area-fam-hrs').toggle();
+        document.getElementById('area-fam-hrs').style.display = "none";
+        document.getElementById('area-fam-hrs').removeAttribute("required");
+    }
+
+});
+
+$('#changeover-exp').change(function() {
+
+    if(document.getElementById('changeover-exp').checked == true){ //if selected
+        $('#co-hrs').val("");
+        $('#changeover-hrs').toggle();
+        document.getElementById('changeover-hrs').style.display = "block";
+        document.getElementById('changeover-hrs').setAttribute("required", "");
+    }
+    else{ //if not selected
+        $('#co-hrs').val("");
+        $('#changeover-hrs').toggle();
+        document.getElementById('changeover-hrs').style.display = "none";
+        document.getElementById('changeover-hrs').removeAttribute("required");
+    }
+
+});
+
+$('#cleanup-exp').change(function() {
+
+    if(document.getElementById('cleanup-exp').checked == true){ //if selected
+        $('#cu-hrs').val("");
+        $('#cleanup-hrs').toggle();
+        document.getElementById('cleanup-hrs').style.display = "block";
+        document.getElementById('cleanup-hrs').setAttribute("required", "");
+    }
+    else{ //if not selected
+        $('#cu-hrs').val("");
+        $('#cleanup-hrs').toggle();
+        document.getElementById('cleanup-hrs').style.display = "none";
+        document.getElementById('cleanup-hrs').removeAttribute("required");
+    }
+
+});
+
+$('#test').change(function() {
+
+    if(document.getElementById('test').checked == true){ //if selected
+        //$('#test-num').val("");
+        $('#testreq').toggle();
+        //document.getElementById('test-num').style.display = "block";
+        document.getElementById('test-num').setAttribute("required", "");
+    }
+    else{ //if not selected
+        //$('#test-num').val("");
+        $('#testreq').toggle();
+        //document.getElementById('test-num').style.display = "none";
+        document.getElementById('test-num').removeAttribute("required");
+    }
+});
+</script>
+
+<script>
+function loadrow(){
+    let rows = parseInt(document.getElementById('test-num').value);
+    let testdetails = document.getElementById('test-details');
+    let rowContent = "";
+
+    for(var i = 0; i < rows; i++)
+    {
+        rowContent += '<div class="form-row">\
+                            <div class="form-group col-md-2">' +
+                                '<label for="test'+ (i+1) +'">' + 'Test ' + (i+1) + ' trigger (hours)</label> \
+                                <input class="form-control" name="test' + (i+1) + '-hrs" placeholder="" type="number" required> \
+                                <div class="valid-feedback">Looks good!</div>\
+                                <div class="invalid-feedback">Please enter the trigger time</div>\
+                            </div>\
+                            <div class="form-group col-md-2">' +
+                                '<label for="test"'+ (i+1) +'>' + 'Test ' + (i+1) + ' pass mark (%)</label> \
+                                <input class="form-control" name="test' + (i+1) + '-pass" placeholder="" type="number" required> \
+                                <div class="valid-feedback">Looks good!</div>\
+                                <div class="invalid-feedback">Please enter the percent pass mark</div>\
+                            </div>\
+                        </div>';
+    }
+    testdetails.innerHTML = rowContent;
+}
+</script>
+<script>
+
+</script>
+
+
+{% endblock %}
