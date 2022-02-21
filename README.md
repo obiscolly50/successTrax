@@ -1,5 +1,9 @@
 SuccessTrax is a web app that enables company management to easily manage
-and keep track of employee's training. It will actively be a work in progress,
+and keep track of employee's training. 
+
+View demonstration video [here](https://www.youtube.com/watch?v=D6DfF0Hwt7Y).
+
+It will actively be a work in progress,
 however, for the purpose of this project, the following functionality has been added:
 - A simple login page for admins
 - Form validation on all form both using javascript and at the backend using python
